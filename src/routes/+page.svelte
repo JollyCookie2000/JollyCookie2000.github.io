@@ -2,6 +2,7 @@
 	import { scale } from 'svelte/transition';
 
 	import AppIcon from '$lib/AppIcon.svelte';
+	import StatusBar from '$lib/StatusBar.svelte';
 
 	class App {
 		public readonly display_name: string;
@@ -25,9 +26,8 @@
 </script>
 
 <div class="homepage">
-	<div class="status-bar">
-		status bar
-	</div>
+	<StatusBar />
+
 	<div class="apps">
 		{#each apps as app}
 			{@const display_name = app.display_name}
@@ -75,11 +75,5 @@
 		top: 0px;
 		width: 100%;
 		z-index: 10;
-	}
-
-	.status-bar {
-		backdrop-filter: blur(8px);
-		background-color: rgba(50, 50, 50, 0.5);
-		box-shadow: 0px 0px 32px rgba(50, 50, 50, 1.0);
 	}
 </style>
