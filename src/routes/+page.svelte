@@ -3,6 +3,7 @@
 
 	import AppIcon from '$lib/AppIcon.svelte';
 	import StatusBar from '$lib/StatusBar.svelte';
+	import LinkAppIcon from '$lib/LinkAppIcon.svelte';
 
 	class App {
 		public readonly display_name: string;
@@ -18,11 +19,9 @@
 		new App('App 1'),
 		new App('App 2'),
 		new App('App 3'),
-		new App('App 4'),
-		new App('App 5'),
 	];
 
-	let is_app_open: boolean = false;
+	let is_app_open: boolean = $state(false);
 </script>
 
 <div class="homepage">
@@ -33,6 +32,8 @@
 			{@const display_name = app.display_name}
 			<AppIcon {display_name} on_click={() => { is_app_open = true; }} />
 		{/each}
+
+		<LinkAppIcon display_name="LinkedIn" url="https://www.linkedin.com/in/lorenzo-adam-piazza" />
 	</div>
 	<div class="dock">
 
