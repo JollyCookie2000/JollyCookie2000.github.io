@@ -1,2 +1,85 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import { scale } from 'svelte/transition';
+
+	import AppIcon from '$lib/AppIcon.svelte';
+
+	class App {
+		public readonly display_name: string;
+
+		constructor(display_name: string) {
+			this.display_name = display_name;
+		}
+	}
+
+	const apps: App[] = [
+		new App('About Me'),
+		new App('Personal Blog'),
+		new App('App 1'),
+		new App('App 2'),
+		new App('App 3'),
+		new App('App 4'),
+		new App('App 5'),
+	];
+
+	let is_app_open: boolean = false;
+</script>
+
+<div class="homepage">
+	<div class="status-bar">
+		status bar
+	</div>
+	<div class="apps">
+		{#each apps as app}
+			{@const display_name = app.display_name}
+			<AppIcon {display_name} on_click={() => { is_app_open = true; }} />
+		{/each}
+	</div>
+	<div class="dock">
+
+	</div>
+
+	{#if is_app_open}
+		<div class="open-app" transition:scale></div>
+	{/if}
+</div>
+
+<style>
+	* {
+		border-width: 0px;
+		box-sizing: border-box;
+		margin: 0px;
+		padding: 0px;
+	}
+
+	.apps {
+		align-content: flex-start;
+		align-items: flex-start;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4rem;
+		height: 500px;
+		justify-content: center;
+		padding: 1rem;
+	}
+
+	.homepage {
+		background-image: url('https://wonderfulengineering.com/wp-content/uploads/2016/01/nature-wallpapers-33.jpg');
+		height: 100%;
+	}
+
+	.open-app {
+		background-color: rgba(0, 0, 0, 0.9);
+		height: 100%;
+		left: 0px;
+		position: fixed;
+		top: 0px;
+		width: 100%;
+		z-index: 10;
+	}
+
+	.status-bar {
+		backdrop-filter: blur(8px);
+		background-color: rgba(50, 50, 50, 0.5);
+		box-shadow: 0px 0px 32px rgba(50, 50, 50, 1.0);
+	}
+</style>
