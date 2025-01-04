@@ -37,6 +37,7 @@
 		background-color: rgba(50, 50, 50, 0.5);
 		box-shadow: 0px 0px 32px rgba(50, 50, 50, 1.0);
 		color: white;
+		font-family: Arial;
 		padding: 2px 16px;
 		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 		user-select: none;

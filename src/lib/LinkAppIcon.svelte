@@ -53,7 +53,8 @@
 	}
 
 	.dark-background {
-		background-color: rgba(0, 0, 0, 0.9);
+		background-color: rgba(0, 0, 0, 0.2);
+		backdrop-filter: blur(4.4px);
 		height: 100%;
 		left: 0px;
 		position: fixed;
@@ -101,7 +102,8 @@
 		z-index: 30;
 	}
 
-	.prompt a, .prompt button {
+	.prompt a,
+	.prompt button {
 		background-color: transparent;
 		color: #0fbcf9;
 		font-family: inherit;
@@ -109,11 +111,14 @@
 		text-decoration: none;
 	}
 
-	.prompt a:active, .prompt button:active {
+	.prompt a:active,
+	.prompt button:active {
 		color: #3c40c6;
 	}
 
-	.prompt a, .prompt button, .prompt p {
+	.prompt a,
+	.prompt button,
+	.prompt p {
 		margin: 8px;
 	}
 </style>
