@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { scale } from 'svelte/transition';
-
 	import AppIcon from '$lib/AppIcon.svelte';
 	import StatusBar from '$lib/StatusBar.svelte';
 	import LinkAppIcon from '$lib/LinkAppIcon.svelte';
@@ -16,12 +14,7 @@
 	const apps: App[] = [
 		new App('About Me'),
 		new App('Personal Blog'),
-		new App('App 1'),
-		new App('App 2'),
-		new App('App 3'),
 	];
-
-	let is_app_open: boolean = $state(false);
 </script>
 
 <div class="homepage">
@@ -30,18 +23,18 @@
 	<div class="apps">
 		{#each apps as app}
 			{@const display_name = app.display_name}
-			<AppIcon {display_name} on_click={() => { is_app_open = true; }} />
+			<AppIcon {display_name} />
 		{/each}
 
-		<LinkAppIcon display_name="LinkedIn" url="https://www.linkedin.com/in/lorenzo-adam-piazza" />
-	</div>
-	<div class="dock">
+		<!-- Icon from: https://en.m.wikipedia.org/wiki/File:LinkedIn_icon.svg -->
+		<LinkAppIcon display_name="LinkedIn" url="https://www.linkedin.com/in/lorenzo-adam-piazza" icon_url="icon_linkedin.svg" />
 
-	</div>
+		<!-- Icon from: https://static-00.iconduck.com/assets.00/bitbucket-icon-1024x921-2jfidpai.png -->
+		<LinkAppIcon display_name="BitBucket" url="https://bitbucket.org/lorenzo_adam_piazza" icon_url="icon_bitbucket.png" />
 
-	{#if is_app_open}
-		<div class="open-app" transition:scale></div>
-	{/if}
+		<!-- Icon from: https://github.com/logos -->
+		<LinkAppIcon display_name="GitHub" url="https://github.com/JollyCookie2000" icon_url="icon_github.svg" />
+	</div>
 </div>
 
 <style>
@@ -65,16 +58,7 @@
 
 	.homepage {
 		background-image: url('https://wonderfulengineering.com/wp-content/uploads/2016/01/nature-wallpapers-33.jpg');
+		background-size: cover;
 		height: 100%;
-	}
-
-	.open-app {
-		background-color: rgba(0, 0, 0, 0.9);
-		height: 100%;
-		left: 0px;
-		position: fixed;
-		top: 0px;
-		width: 100%;
-		z-index: 10;
 	}
 </style>

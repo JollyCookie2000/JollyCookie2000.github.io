@@ -26,13 +26,11 @@
 	}
 
 	.app {
-		/* background-color: red; */
 		height: 8rem;
 		width: 8rem;
 	}
 
 	.icon {
-		/* background-color: green; */
 		height: 80%;
 		padding: 4px;
 		width: 100%;
@@ -44,7 +42,6 @@
 	}
 
 	.name {
-		/* background-color: blue; */
 		color: white;
 		font-family: Arial;
 		font-weight: bold;
