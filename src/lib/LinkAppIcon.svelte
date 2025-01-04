@@ -15,9 +15,9 @@
 </script>
 
 <div class="app">
-	<div class="icon" onclick={() => { show_prompt = true; } }>
+	<button class="icon" onclick={() => { show_prompt = true; } }>
 		<img src={icon_url} alt="Website icon" />
-	</div>
+	</button>
 	<p class="name">{display_name}</p>
 
 	{#if show_prompt}
@@ -63,6 +63,7 @@
 	}
 
 	.icon {
+		background-color: transparent;
 		height: 80%;
 		padding: 4px;
 		text-align: center;
