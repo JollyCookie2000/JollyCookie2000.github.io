@@ -25,7 +25,7 @@
 			<p>You are trying to open the following external link:</p>
 			<p class="bold">{url}</p>
 			<p>How do you wish to open it?</p>
-			<a onclick={() => show_prompt = false}>Close</a>
+			<button onclick={() => show_prompt = false}>Close</button>
 			<a href={url} target="_self">Current tab</a>
 			<a href={url} target="_blank">New tab</a>
 		</div>
@@ -100,16 +100,19 @@
 		z-index: 30;
 	}
 
-	.prompt a {
+	.prompt a, .prompt button {
+		background-color: transparent;
 		color: #0fbcf9;
+		font-family: inherit;
+		font-size: inherit;
 		text-decoration: none;
 	}
 
-	.prompt a:active {
+	.prompt a:active, .prompt button:active {
 		color: #3c40c6;
 	}
 
-	.prompt a, .prompt p {
+	.prompt a, .prompt button, .prompt p {
 		margin: 8px;
 	}
 </style>
