@@ -18,7 +18,7 @@
 	<button class="icon" onclick={() => { show_prompt = true; } }>
 		<img src={icon_url} alt="Website icon" />
 	</button>
-	<p class="name">{display_name}</p>
+	<p class="name">🔗 {display_name}</p>
 
 	{#if show_prompt}
 		<div class="prompt" transition:scale={{ duration: 250 }}>
