@@ -57,7 +57,8 @@
 	}
 
 	.homepage {
-		background-image: url('https://wonderfulengineering.com/wp-content/uploads/2016/01/nature-wallpapers-33.jpg');
+		/* https://unsplash.com/photos/a-bunch-of-different-shapes-and-sizes-on-a-wall-3tNqoO_ReHQ */
+		background-image: url('/wallpaper.jpg');
 		background-size: cover;
 		height: 100%;
 	}
