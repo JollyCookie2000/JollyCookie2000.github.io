@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { onMount } from "svelte";
+	import { onMount } from 'svelte';
 
 	let current_date_time: Date = $state(new Date());
 
 	let current_time_string: string = $derived(
 		`${current_date_time.getHours()}:`.padStart(3, '0') +
-		`${current_date_time.getMinutes()}:`.padStart(3, '0') +
-		`${current_date_time.getSeconds()}`.padStart(2, '0')
+			`${current_date_time.getMinutes()}:`.padStart(3, '0') +
+			`${current_date_time.getSeconds()}`.padStart(2, '0')
 	);
 
 	onMount(() => {
@@ -16,7 +16,7 @@
 
 		return () => {
 			clearInterval(clock_update_interval);
-		}
+		};
 	});
 </script>
 
@@ -35,11 +35,15 @@
 	.status-bar {
 		backdrop-filter: blur(8px);
 		background-color: rgba(50, 50, 50, 0.5);
-		box-shadow: 0px 0px 32px rgba(50, 50, 50, 1.0);
+		box-shadow: 0px 0px 32px rgba(50, 50, 50, 1);
 		color: white;
 		font-family: Arial;
 		padding: 2px 16px;
-		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+		text-shadow:
+			-1px -1px 0 #000,
+			1px -1px 0 #000,
+			-1px 1px 0 #000,
+			1px 1px 0 #000;
 		user-select: none;
 	}
 </style>

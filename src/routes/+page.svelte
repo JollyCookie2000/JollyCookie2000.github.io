@@ -11,9 +11,7 @@
 		}
 	}
 
-	const apps: App[] = [
-		new App('About Me'),
-	];
+	const apps: App[] = [new App('About Me')];
 </script>
 
 <div class="homepage">
@@ -22,17 +20,29 @@
 	<div class="apps">
 		{#each apps as app}
 			{@const display_name = app.display_name}
-			<AppIcon {display_name} on_click={ () => window.alert('Coming soon!') } />
+			<AppIcon {display_name} on_click={() => window.alert('Coming soon!')} />
 		{/each}
 
 		<!-- Icon from: https://en.m.wikipedia.org/wiki/File:LinkedIn_icon.svg -->
-		<LinkAppIcon display_name="LinkedIn" url="https://www.linkedin.com/in/lorenzo-adam-piazza" icon_url="icon_linkedin.svg" />
+		<LinkAppIcon
+			display_name="LinkedIn"
+			url="https://www.linkedin.com/in/lorenzo-adam-piazza"
+			icon_url="icon_linkedin.svg"
+		/>
 
 		<!-- Icon from: https://static-00.iconduck.com/assets.00/bitbucket-icon-1024x921-2jfidpai.png -->
-		<LinkAppIcon display_name="BitBucket" url="https://bitbucket.org/lorenzo_adam_piazza" icon_url="icon_bitbucket.png" />
+		<LinkAppIcon
+			display_name="BitBucket"
+			url="https://bitbucket.org/lorenzo_adam_piazza"
+			icon_url="icon_bitbucket.png"
+		/>
 
 		<!-- Icon from: https://github.com/logos -->
-		<LinkAppIcon display_name="GitHub" url="https://github.com/JollyCookie2000" icon_url="icon_github.svg" />
+		<LinkAppIcon
+			display_name="GitHub"
+			url="https://github.com/JollyCookie2000"
+			icon_url="icon_github.svg"
+		/>
 	</div>
 </div>
 

@@ -4,18 +4,23 @@
 	let {
 		display_name,
 		url,
-		icon_url,
-	} : {
+		icon_url
+	}: {
 		display_name: string;
 		url: string;
-		icon_url: string,
+		icon_url: string;
 	} = $props();
 
 	let show_prompt: boolean = $state(false);
 </script>
 
 <div class="app">
-	<button class="icon" onclick={() => { show_prompt = true; } }>
+	<button
+		class="icon"
+		onclick={() => {
+			show_prompt = true;
+		}}
+	>
 		<img src={icon_url} alt="Website icon" />
 	</button>
 	<p class="name">🔗 {display_name}</p>
@@ -25,12 +30,18 @@
 			<p>You are trying to open the following external link:</p>
 			<p class="bold">{url}</p>
 			<p>How do you wish to open it?</p>
-			<button onclick={() => show_prompt = false}>Close</button>
+			<button onclick={() => (show_prompt = false)}>Close</button>
 			<a href={url} target="_self">Current tab</a>
 			<a href={url} target="_blank">New tab</a>
 		</div>
 
-		<div class="dark-background" onclick={() => { show_prompt = false; } } transition:fade={{ duration: 250 }}></div>
+		<div
+			class="dark-background"
+			onclick={() => {
+				show_prompt = false;
+			}}
+			transition:fade={{ duration: 250 }}
+		></div>
 	{/if}
 </div>
 
@@ -82,7 +93,11 @@
 		height: 20%;
 		padding: 4px;
 		text-align: center;
-		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+		text-shadow:
+			-1px -1px 0 #000,
+			1px -1px 0 #000,
+			-1px 1px 0 #000,
+			1px 1px 0 #000;
 		user-select: none;
 	}
 

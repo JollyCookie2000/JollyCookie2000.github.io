@@ -1,8 +1,8 @@
 <script lang="ts">
 	let {
 		display_name,
-		on_click = () => {},
-	} : {
+		on_click = () => {}
+	}: {
 		display_name: string;
 		on_click?: () => void;
 	} = $props();
@@ -47,7 +47,11 @@
 		height: 20%;
 		padding: 4px;
 		text-align: center;
-		text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+		text-shadow:
+			-1px -1px 0 #000,
+			1px -1px 0 #000,
+			-1px 1px 0 #000,
+			1px 1px 0 #000;
 		user-select: none;
 	}
 </style>
