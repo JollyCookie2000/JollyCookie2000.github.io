@@ -13,7 +13,6 @@
 
 	const apps: App[] = [
 		new App('About Me'),
-		new App('Personal Blog'),
 	];
 </script>
 
@@ -23,7 +22,7 @@
 	<div class="apps">
 		{#each apps as app}
 			{@const display_name = app.display_name}
-			<AppIcon {display_name} />
+			<AppIcon {display_name} on_click={ () => window.alert('Coming soon!') } />
 		{/each}
 
 		<!-- Icon from: https://en.m.wikipedia.org/wiki/File:LinkedIn_icon.svg -->

@@ -10,7 +10,7 @@
 
 <div class="app">
 	<button class="icon" onclick={on_click}>
-		<img src="icon_missing.svg" alt="Website icon" />
+		<img src="icon_missing.svg" alt="Application icon" />
 	</button>
 	<p class="name">{display_name}</p>
 </div>
