@@ -1,10 +1,18 @@
 <script lang="ts">
 	import AppIcon from "$lib/AppIcon.svelte";
+	import LinkApp from "$lib/apps/LinkApp.svelte";
+
+	const apps = [
+		{ // Test App
+			app_component: LinkApp,
+			display_name: "🔗 Test App",
+		}
+	];
 </script>
 
 <div class="apps">
-	{#each { length: 5 } as app}
-		<AppIcon display_name="App" />
+	{#each apps as app}
+		<AppIcon display_name={app.display_name} />
 	{/each}
 </div>
 
