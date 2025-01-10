@@ -1,9 +1,24 @@
 <script lang="ts">
+	import type { Component } from "svelte";
+
 	import StatusBar from "./StatusBar.svelte";
+
+	let {
+		// The app that is currently being displayed.
+		app,
+	}: {
+		app: Component;
+	} = $props();
+
+	const AppComponent = $derived(app);
 </script>
 
 <div class="screen">
 	<StatusBar />
+
+	<AppComponent />
+
+	<!-- TODO: Add navigation buttons, Android-style. -->
 </div>
 
 <style>
