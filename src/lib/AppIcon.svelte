@@ -1,16 +1,18 @@
 <script lang="ts">
 	let {
 		display_name,
+		icon,
 		on_click = () => {}
 	}: {
 		display_name: string;
+		icon: string;
 		on_click?: () => void;
 	} = $props();
 </script>
 
 <div class="app">
 	<button class="icon" onclick={on_click}>
-		<img src="icon_missing.svg" alt="Application icon" />
+		<img src={icon} alt="Application icon" />
 	</button>
 	<p class="name">{display_name}</p>
 </div>

@@ -6,13 +6,14 @@
 		{ // Test App
 			app_component: LinkApp,
 			display_name: "🔗 Test App",
+			icon: 'favicon.ico',
 		}
 	];
 </script>
 
 <div class="apps">
 	{#each apps as app}
-		<AppIcon display_name={app.display_name} />
+		<AppIcon display_name={app.display_name} icon={app.icon} />
 	{/each}
 </div>
 
