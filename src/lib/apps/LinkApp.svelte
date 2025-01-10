@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { fade, scale } from 'svelte/transition';
+
 	import AppLauncher from '$lib/AppLauncher.svelte';
 	import AppManagerAction from '$lib/AppManagerAction';
-	import { fade, scale } from 'svelte/transition';
 
 	let {
 		app_manager_exec,
