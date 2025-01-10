@@ -2,6 +2,7 @@
 	import type { Component } from "svelte";
 
 	import StatusBar from "./StatusBar.svelte";
+	import type AppManagerAction from "./AppManagerAction";
 
 	let {
 		// The app that is currently being displayed.
@@ -12,12 +13,16 @@
 	} = $props();
 
 	const AppComponent = $derived(app);
+
+	function app_manager_exec(action: AppManagerAction) {
+		app = action.app_component;
+	}
 </script>
 
 <div class="screen">
 	<StatusBar />
 
-	<AppComponent />
+	<AppComponent {app_manager_exec} />
 
 	<!-- TODO: Add navigation buttons, Android-style. -->
 </div>

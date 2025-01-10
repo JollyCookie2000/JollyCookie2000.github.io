@@ -1,16 +1,18 @@
 <script lang="ts">
+	import AppLauncher from '$lib/AppLauncher.svelte';
+	import AppManagerAction from '$lib/AppManagerAction';
 	import { fade, scale } from 'svelte/transition';
 
 	let {
-		on_close,
+		app_manager_exec,
 		url,
 	}: {
-		on_close: () => void,
+		app_manager_exec: (action: AppManagerAction) => void,
 		url: string;
 	} = $props();
 
 	function close_prompt() {
-		on_close();
+		app_manager_exec(new AppManagerAction(AppLauncher));
 	}
 </script>
 

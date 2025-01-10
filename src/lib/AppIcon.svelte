@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type AppManagerAction from "./AppManagerAction";
+
 	let {
 		display_name,
 		icon,

@@ -4,6 +4,14 @@
 	import AppIcon from "$lib/AppIcon.svelte";
 	import LinkApp from "$lib/apps/LinkApp.svelte";
 
+	import AppManagerAction from "./AppManagerAction";
+
+	let {
+		app_manager_exec,
+	}: {
+		app_manager_exec: (action: AppManagerAction) => void;
+	} = $props();
+
 	const apps = [
 		{ // Test App
 			app_component: LinkApp,
@@ -13,15 +21,14 @@
 	];
 
 	function on_icon_click(app_component: Component) {
-		// TODO: Tell AppManager to open the app.
-		window.alert('Hello, World!');
+		app_manager_exec(new AppManagerAction(app_component));
 	}
 </script>
 
 <div class="apps">
 	{#each apps as app}
 		{@const onclick = () => on_icon_click(app.app_component)}
-		<AppIcon display_name={app.display_name} icon={app.icon} {onclick} />
+		<AppIcon display_name={app.display_name} icon={app.icon} {onclick} {app_manager_exec} />
 	{/each}
 </div>
 
