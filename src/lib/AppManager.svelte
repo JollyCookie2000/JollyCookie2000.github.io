@@ -7,6 +7,7 @@
 		// The app that is currently being displayed.
 		app,
 	}: {
+		// TODO: Create an interface to represent apps.
 		app: Component;
 	} = $props();
 

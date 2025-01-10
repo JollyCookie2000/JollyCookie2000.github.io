@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { Component } from "svelte";
+
 	import AppIcon from "$lib/AppIcon.svelte";
 	import LinkApp from "$lib/apps/LinkApp.svelte";
 
@@ -9,11 +11,17 @@
 			icon: 'favicon.ico',
 		}
 	];
+
+	function on_icon_click(app_component: Component) {
+		// TODO: Tell AppManager to open the app.
+		window.alert('Hello, World!');
+	}
 </script>
 
 <div class="apps">
 	{#each apps as app}
-		<AppIcon display_name={app.display_name} icon={app.icon} />
+		{@const onclick = () => on_icon_click(app.app_component)}
+		<AppIcon display_name={app.display_name} icon={app.icon} {onclick} />
 	{/each}
 </div>
 
