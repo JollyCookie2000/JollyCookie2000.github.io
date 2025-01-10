@@ -1,22 +1,23 @@
 <script lang="ts">
-	import type { Component } from "svelte";
+	import type { Component } from 'svelte';
 
-	import AppIcon from "$lib/AppIcon.svelte";
-	import LinkApp from "$lib/apps/LinkApp.svelte";
+	import AppIcon from '$lib/AppIcon.svelte';
+	import LinkApp from '$lib/apps/LinkApp.svelte';
 
-	import AppManagerAction from "./AppManagerAction";
+	import AppManagerAction from './AppManagerAction';
 
 	let {
-		app_manager_exec,
+		app_manager_exec
 	}: {
 		app_manager_exec: (action: AppManagerAction) => void;
 	} = $props();
 
 	const apps = [
-		{ // Test App
+		{
+			// Test App
 			app_component: LinkApp,
-			display_name: "🔗 Test App",
-			icon: 'favicon.ico',
+			display_name: '🔗 Test App',
+			icon: 'favicon.ico'
 		}
 	];
 

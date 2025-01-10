@@ -5,9 +5,9 @@
 
 	let {
 		app_manager_exec,
-		url,
+		url
 	}: {
-		app_manager_exec: (action: AppManagerAction) => void,
+		app_manager_exec: (action: AppManagerAction) => void;
 		url: string;
 	} = $props();
 
@@ -25,11 +25,7 @@
 	<a href={url} target="_blank">New tab</a>
 </div>
 
-<div
-	class="dark-background"
-	onclick={close_prompt}
-	transition:fade={{ duration: 250 }}
-></div>
+<div class="dark-background" onclick={close_prompt} transition:fade={{ duration: 250 }}></div>
 
 <style>
 	* {

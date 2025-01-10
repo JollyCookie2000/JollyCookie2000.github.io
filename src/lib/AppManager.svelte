@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { Component } from "svelte";
+	import type { Component } from 'svelte';
 
-	import StatusBar from "./StatusBar.svelte";
-	import type AppManagerAction from "./AppManagerAction";
+	import StatusBar from './StatusBar.svelte';
+	import type AppManagerAction from './AppManagerAction';
 
 	let {
 		// The app that is currently being displayed.
-		app,
+		app
 	}: {
 		// TODO: Create an interface to represent apps.
 		app: Component;

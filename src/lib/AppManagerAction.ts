@@ -1,7 +1,5 @@
-import type { Component } from "svelte";
+import type { Component } from 'svelte';
 
 export default class AppManagerAction {
-	constructor(
-		public readonly app_component: Component,
-	) {}
+	constructor(public readonly app_component: Component) {}
 }

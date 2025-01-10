@@ -2,7 +2,7 @@
 	let {
 		display_name,
 		icon,
-		onclick,
+		onclick
 	}: {
 		display_name: string;
 		icon: string;
