@@ -28,7 +28,7 @@
 <div class="apps">
 	{#each apps as app}
 		{@const onclick = () => on_icon_click(app.app_component)}
-		<AppIcon display_name={app.display_name} icon={app.icon} {onclick} {app_manager_exec} />
+		<AppIcon display_name={app.display_name} icon={app.icon} {onclick} />
 	{/each}
 </div>
 
