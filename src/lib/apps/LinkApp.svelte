@@ -3,13 +3,14 @@
 
 	import AppLauncher from '$lib/AppLauncher.svelte';
 	import AppManagerAction from '$lib/AppManagerAction';
+	import type { AppOptions } from '$lib/AppOptions';
 
 	let {
 		app_manager_exec,
 		app_options
 	}: {
 		app_manager_exec: (action: AppManagerAction) => void;
-		app_options?: Map<string, any>;
+		app_options?: AppOptions;
 	} = $props();
 
 	const url: string = app_options?.get('url');

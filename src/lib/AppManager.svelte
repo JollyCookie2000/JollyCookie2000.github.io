@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
 
-	import StatusBar from './StatusBar.svelte';
-	import type AppManagerAction from './AppManagerAction';
+	import StatusBar from '$lib/StatusBar.svelte';
+	import type AppManagerAction from '$lib/AppManagerAction';
+	import type { AppOptions } from '$lib/AppOptions';
 
 	let {
 		// The app that is currently being displayed.
@@ -11,8 +12,7 @@
 	}: {
 		// TODO: Create an interface to represent apps.
 		app: Component;
-		// TODO: Make Map<string, any> into a type.
-		app_options?: Map<string, any>;
+		app_options?: AppOptions;
 	} = $props();
 
 	const AppComponent = $derived(app);

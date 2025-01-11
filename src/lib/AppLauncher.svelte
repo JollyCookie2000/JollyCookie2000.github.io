@@ -2,9 +2,9 @@
 	import type { Component } from 'svelte';
 
 	import AppIcon from '$lib/AppIcon.svelte';
+	import AppManagerAction from '$lib/AppManagerAction';
 	import LinkApp from '$lib/apps/LinkApp.svelte';
-
-	import AppManagerAction from './AppManagerAction';
+	import type { AppOptions } from './AppOptions';
 
 	let {
 		app_manager_exec
@@ -15,17 +15,16 @@
 	const apps = [
 		// TODO: Make this into a class.
 		{
-			// Test App
 			app_component: LinkApp,
-			display_name: '🔗 Test App',
-			icon: 'favicon.ico',
+			display_name: '🔗 LinkedIn',
+			icon: 'icon_linkedin.svg',
 			options: new Map(Object.entries({
-				'url': 'https://duckduckgo.com'
+				'url': 'https://www.linkedin.com/in/lorenzo-adam-piazza'
 			}))
 		}
 	];
 
-	function on_icon_click(app_component: Component, app_options: Map<string, any>) {
+	function on_icon_click(app_component: Component, app_options: AppOptions) {
 		app_manager_exec(new AppManagerAction(app_component, app_options));
 	}
 </script>
