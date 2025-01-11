@@ -13,22 +13,26 @@
 	} = $props();
 
 	const apps = [
+		// TODO: Make this into a class.
 		{
 			// Test App
 			app_component: LinkApp,
 			display_name: '🔗 Test App',
-			icon: 'favicon.ico'
+			icon: 'favicon.ico',
+			options: new Map(Object.entries({
+				'url': 'https://duckduckgo.com'
+			}))
 		}
 	];
 
-	function on_icon_click(app_component: Component) {
-		app_manager_exec(new AppManagerAction(app_component));
+	function on_icon_click(app_component: Component, app_options: Map<string, any>) {
+		app_manager_exec(new AppManagerAction(app_component, app_options));
 	}
 </script>
 
 <div class="apps">
 	{#each apps as app}
-		{@const onclick = () => on_icon_click(app.app_component)}
+		{@const onclick = () => on_icon_click(app.app_component, app.options)}
 		<AppIcon display_name={app.display_name} icon={app.icon} {onclick} />
 	{/each}
 </div>

@@ -6,14 +6,16 @@
 
 	let {
 		app_manager_exec,
-		url
+		app_options
 	}: {
 		app_manager_exec: (action: AppManagerAction) => void;
-		url: string;
+		app_options?: Map<string, any>;
 	} = $props();
 
+	const url: string = app_options?.get('url');
+
 	function close_prompt() {
-		app_manager_exec(new AppManagerAction(AppLauncher));
+		app_manager_exec(new AppManagerAction(AppLauncher, new Map()));
 	}
 </script>
 
