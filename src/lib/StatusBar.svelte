@@ -21,7 +21,7 @@
 </script>
 
 <div class="status-bar">
-	{current_time_string}
+	<p>{current_time_string}</p>
 </div>
 
 <style>
@@ -33,11 +33,14 @@
 	}
 
 	.status-bar {
+		align-items: center;
 		backdrop-filter: blur(8px);
 		background-color: rgba(50, 50, 50, 0.5);
 		box-shadow: 0px 0px 32px rgba(50, 50, 50, 1);
 		color: white;
+		display: flex;
 		font-family: Arial;
+		height: 100%;
 		padding: 2px 16px;
 		text-shadow:
 			-1px -1px 0 #000,
