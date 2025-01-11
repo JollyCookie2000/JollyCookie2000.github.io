@@ -5,6 +5,7 @@
 	import AppManagerAction from '$lib/AppManagerAction';
 	import LinkApp from '$lib/apps/LinkApp.svelte';
 	import type { AppOptions } from './AppOptions';
+	import BrowserApp from './apps/BrowserApp.svelte';
 
 	let {
 		app_manager_exec
@@ -15,6 +16,13 @@
 	const apps = [
 		// TODO: Make this into a class.
 		{
+			app_component: BrowserApp,
+			display_name: 'About Me',
+			icon: 'icon_missing.svg',
+			options: new Map(Object.entries({
+				'url': 'about.html'
+			}))
+		}, {
 			app_component: LinkApp,
 			display_name: '🔗 LinkedIn',
 			icon: 'icon_linkedin.svg',

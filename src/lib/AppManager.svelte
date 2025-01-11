@@ -6,11 +6,12 @@
 	import type { AppOptions } from '$lib/AppOptions';
 
 	let {
-		// The app that is currently being displayed.
+		// The app that is currently being displayed
 		app,
+		// The startup options for the current app
 		app_options
 	}: {
-		// TODO: Create an interface to represent apps.
+		// TODO: Create an interface to represent app components.
 		app: Component;
 		app_options?: AppOptions;
 	} = $props();
