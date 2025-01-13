@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TreesTents from 'tents-svelte';
-	
+
 	import type AppManagerAction from '$lib/AppManagerAction';
 	import type { AppOptions } from '$lib/AppOptions';
 

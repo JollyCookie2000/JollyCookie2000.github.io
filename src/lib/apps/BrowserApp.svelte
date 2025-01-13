@@ -31,7 +31,7 @@
 	}
 
 	.app {
-		background-color: #dcdde1;;
+		background-color: #dcdde1;
 		height: 100%;
 		width: 100%;
 	}

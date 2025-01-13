@@ -35,8 +35,8 @@
 	</div>
 
 	<div class="space-nav">
-		<button class="button-home" onclick={() => app = AppLauncher}>
-			<img src="house.svg" alt="Home icon">
+		<button class="button-home" onclick={() => (app = AppLauncher)}>
+			<img src="house.svg" alt="Home icon" />
 		</button>
 	</div>
 </div>
@@ -80,6 +80,6 @@
 	}
 
 	.space-status {
-		height: 3%
+		height: 3%;
 	}
 </style>

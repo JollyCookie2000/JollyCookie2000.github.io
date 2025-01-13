@@ -20,31 +20,43 @@
 			app_component: BrowserApp,
 			display_name: 'About Me',
 			icon: 'icon_missing.svg',
-			options: new Map(Object.entries({
-				'url': 'about.html'
-			}))
-		}, {
+			options: new Map(
+				Object.entries({
+					url: 'about.html'
+				})
+			)
+		},
+		{
 			app_component: LinkApp,
 			display_name: '🔗 LinkedIn',
 			icon: 'icon_linkedin.svg',
-			options: new Map(Object.entries({
-				'url': 'https://www.linkedin.com/in/lorenzo-adam-piazza'
-			}))
-		}, {
+			options: new Map(
+				Object.entries({
+					url: 'https://www.linkedin.com/in/lorenzo-adam-piazza'
+				})
+			)
+		},
+		{
 			app_component: LinkApp,
 			display_name: '🔗 BitBucket',
 			icon: 'icon_bitbucket.png',
-			options: new Map(Object.entries({
-				'url': 'https://bitbucket.org/lorenzo_adam_piazza'
-			}))
-		}, {
+			options: new Map(
+				Object.entries({
+					url: 'https://bitbucket.org/lorenzo_adam_piazza'
+				})
+			)
+		},
+		{
 			app_component: LinkApp,
 			display_name: '🔗 GitHub',
 			icon: 'icon_github.svg',
-			options: new Map(Object.entries({
-				'url': 'https://github.com/JollyCookie2000'
-			}))
-		}, {
+			options: new Map(
+				Object.entries({
+					url: 'https://github.com/JollyCookie2000'
+				})
+			)
+		},
+		{
 			app_component: TentsApp,
 			display_name: 'Tents',
 			icon: 'icon_tents.png',
