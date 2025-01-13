@@ -27,7 +27,9 @@
 	}
 
 	.app {
+		background-color: #ecf0f1;
 		height: 100%;
+		padding: 1rem;
 		width: 100%;
 	}
 </style>
