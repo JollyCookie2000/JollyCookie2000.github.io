@@ -13,7 +13,9 @@
 	const url: string = app_options?.get('url');
 </script>
 
-<iframe title={url} src={url} frameborder="0"></iframe>
+<div class="app">
+	<iframe title={url} src={url} frameborder="0"></iframe>
+</div>
 
 <style>
 	* {
@@ -24,6 +26,12 @@
 	}
 
 	iframe {
+		height: 95%;
+		width: 100%;
+	}
+
+	.app {
+		background-color: #dcdde1;;
 		height: 100%;
 		width: 100%;
 	}
