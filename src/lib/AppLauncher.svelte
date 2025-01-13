@@ -6,6 +6,7 @@
 	import LinkApp from '$lib/apps/LinkApp.svelte';
 	import type { AppOptions } from './AppOptions';
 	import BrowserApp from './apps/BrowserApp.svelte';
+	import TentsApp from './apps/TentsApp.svelte';
 
 	let {
 		app_manager_exec
@@ -43,6 +44,11 @@
 			options: new Map(Object.entries({
 				'url': 'https://github.com/JollyCookie2000'
 			}))
+		}, {
+			app_component: TentsApp,
+			display_name: 'Tents',
+			icon: 'icon_tents.png',
+			options: null
 		}
 	];
 
