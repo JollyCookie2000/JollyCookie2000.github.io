@@ -15,10 +15,7 @@ const config = {
 			fallback: null, // Fallback page in case of error
 			precompress: false, // Pre-compress files with brotli and gzip
 			strict: true
-		}),
-		paths: {
-			base: process.env.NODE_ENV === 'production' ? '/jollycookie2000.github.io' : '',
-		}
+		})
 	}
 };
 
