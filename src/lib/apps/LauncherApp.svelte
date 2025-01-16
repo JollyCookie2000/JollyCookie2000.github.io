@@ -61,6 +61,16 @@
 			display_name: 'Tents',
 			icon: 'icon_tents.png',
 			options: null
+		},
+		{
+			app_component: BrowserApp,
+			display_name: 'Blog',
+			icon: 'icon_blog.svg',
+			options: new Map(
+				Object.entries({
+					url: 'blog/index.html'
+				})
+			)
 		}
 	];
 
