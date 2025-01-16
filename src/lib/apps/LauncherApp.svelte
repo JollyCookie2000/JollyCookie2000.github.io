@@ -19,7 +19,7 @@
 		{
 			app_component: BrowserApp,
 			display_name: 'About Me',
-			icon: 'icon_missing.svg',
+			icon: 'icon_about.svg',
 			options: new Map(
 				Object.entries({
 					url: 'about.html'
