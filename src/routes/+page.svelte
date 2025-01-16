@@ -1,10 +1,10 @@
 <script lang="ts">
-	import AppLauncher from '$lib/AppLauncher.svelte';
+	import LauncherApp from '$lib/apps/LauncherApp.svelte';
 	import AppManager from '$lib/AppManager.svelte';
 </script>
 
 <div class="window">
-	<AppManager app={AppLauncher} />
+	<AppManager app={LauncherApp} />
 </div>
 
 <style>

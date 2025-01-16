@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
 
-	import StatusBar from '$lib/StatusBar.svelte';
-	import type AppManagerAction from '$lib/AppManagerAction';
-	import type { AppOptions } from '$lib/AppOptions';
-	import AppLauncher from './AppLauncher.svelte';
+	import StatusBar from './StatusBar.svelte';
+	import type AppManagerAction from './AppManagerAction';
+	import type { AppOptions } from './apps/AppOptions';
+	import LauncherApp from './apps/LauncherApp.svelte';
 
 	let {
 		// The app that is currently being displayed
@@ -35,7 +35,7 @@
 	</div>
 
 	<div class="space-nav">
-		<button class="button-home" onclick={() => (app = AppLauncher)}>
+		<button class="button-home" onclick={() => (app = LauncherApp)}>
 			<img src="house.svg" alt="Home icon" />
 		</button>
 	</div>

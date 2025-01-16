@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fade, scale } from 'svelte/transition';
 
-	import AppLauncher from '$lib/AppLauncher.svelte';
-	import AppManagerAction from '$lib/AppManagerAction';
-	import type { AppOptions } from '$lib/AppOptions';
+	import AppManagerAction from '../AppManagerAction';
+	import type { AppOptions } from './AppOptions';
+	import LauncherApp from './LauncherApp.svelte';
 
 	let {
 		app_manager_exec,
@@ -16,7 +16,7 @@
 	const url: string = app_options?.get('url');
 
 	function close_prompt() {
-		app_manager_exec(new AppManagerAction(AppLauncher, new Map()));
+		app_manager_exec(new AppManagerAction(LauncherApp, new Map()));
 	}
 </script>
 

@@ -1,6 +1,6 @@
 import type { Component } from 'svelte';
 
-import type { AppOptions } from './AppOptions';
+import type { AppOptions } from './apps/AppOptions';
 
 export default class AppManagerAction {
 	constructor(

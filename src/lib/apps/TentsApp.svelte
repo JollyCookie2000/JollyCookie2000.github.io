@@ -2,7 +2,7 @@
 	import TreesTents from 'tents-svelte';
 
 	import type AppManagerAction from '$lib/AppManagerAction';
-	import type { AppOptions } from '$lib/AppOptions';
+	import type { AppOptions } from '$lib/apps/AppOptions';
 
 	let {
 		app_manager_exec,

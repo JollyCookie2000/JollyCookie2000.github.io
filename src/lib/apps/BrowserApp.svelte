@@ -1,6 +1,6 @@
 <script lang="ts">
-	import AppManagerAction from '$lib/AppManagerAction';
-	import type { AppOptions } from '$lib/AppOptions';
+	import AppManagerAction from '../AppManagerAction';
+	import type { AppOptions } from './AppOptions';
 
 	let {
 		app_manager_exec,

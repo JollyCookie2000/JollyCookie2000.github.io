@@ -5,8 +5,8 @@
 	import AppManagerAction from '$lib/AppManagerAction';
 	import LinkApp from '$lib/apps/LinkApp.svelte';
 	import type { AppOptions } from './AppOptions';
-	import BrowserApp from './apps/BrowserApp.svelte';
-	import TentsApp from './apps/TentsApp.svelte';
+	import BrowserApp from './BrowserApp.svelte';
+	import TentsApp from './TentsApp.svelte';
 
 	let {
 		app_manager_exec
