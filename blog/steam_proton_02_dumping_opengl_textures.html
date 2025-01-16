@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Steam Proton #02 - Dumping OpenGL textures</title>
+		<style>
+			body {
+				color: #2f3640;
+			}
+
+			h1 {
+				font-size: 1.7rem;
+			}
+
+			a,
+			p {
+				font-size: 1.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 id="steam-proton-02-dumping-opengl-textures">Steam Proton #02 - Dumping OpenGL textures</h1>
+		<p>
+			Hey all! Welcome to the second post of my blog series on exploring and tinkering with
+			Valve&#39;s Proton! This time I&#39;m going to do something slightly more complex than a
+			simple Hello World: this time, I&#39;m going to make Proton dump all of a game&#39;s textures.
+			For simplicity, I&#39;m going to be using the game
+			<em>Hyperdimension Neptunia: Re;Birth1</em> which, contrary to what the its Steam page says,
+			only uses OpenGL and not DirectX 10. Also, while this game is 32-bits, this implementation
+			should work with any game that uses OpenGL, 32-bits or 64-bits.
+		</p>
+		<blockquote>
+			<p>
+				Note: Copyright laws still apply! I&#39;m no lawyer, but I&#39;m pretty sure we don&#39;t
+				have permission to use these textures outside of the game. This is purely for academic
+				purpose.
+			</p>
+		</blockquote>
+		<p>
+			This is not a tutorial on OpenGL. Instead, refer to this guide that talks about textures in
+			OpenGL if you want to know more:
+			<a href="https://learnopengl.com/Getting-started/Textures"
+				>learnopengl.com/Getting-started/Textures</a
+			>.
+		</p>
+		<p>
+			I&#39;m going to keep things as simple as possible and, as such, I&#39;m only interested in
+			one function: <code>glTexImage2D</code> (<a
+				href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexImage2D.xhtml"
+				>reference</a
+			>). Of all the parameters that this function accepts, I&#39;m only interested in the
+			following:
+		</p>
+		<ul>
+			<li>
+				<code>GLenum target</code>: Specifies the target texture. For now, I&#39;m only going to
+				support the <code>GL_TEXTURE_2D</code> (<code>0x0DE1</code>) target.
+			</li>
+			<li><code>GLsizei width</code>: Specifies the width of the texture image.</li>
+			<li><code>GLsizei height</code>: Specifies the height of the texture image.</li>
+			<li>
+				<code>GLenum format</code>: Specifies the format of the pixel data. For now, I&#39;m only
+				going to support the <code>GL_RGBA</code> (<code>0x1908</code>) format, since that seems to
+				be the only texture format that the game uses. It should be pretty easy to support other
+				formats.
+			</li>
+			<li>
+				<code>GLenum type</code>: Specifies the data type of the pixel data. This is the data type
+				in which the texture is passed to this function. For now, I&#39;m only going to support the
+				<code>GL_UNSIGNED_BYTE</code> (<code>0x1401</code>) data type.
+			</li>
+			<li>
+				<code>const void* data</code>: Specifies a pointer to the image data in memory. This is the
+				actual pixel data for the texture. For example, if the texture format is
+				<code>GL_RGBA</code> and the data type is <code>GL_UNSIGNED_BYTE</code>, then this argument
+				is going to be a pointer to an array of unsigned bytes, where every group of 4 bytes is
+				going to represent a pixel. In this example, the array will have a size of
+				<em>width x height x 4 x 1</em> bytes.
+			</li>
+		</ul>
+		<blockquote>
+			<p>
+				Note: constants like <code>GL_TEXTURE_2D</code> are defined in the file
+				<code>wine/include/wine/wgl.h</code>. You can use a command like
+				<code>$ grep --recursive &#39;GL_TEXTURE_2D&#39; ./</code> to search for a specific
+				constant.
+			</p>
+		</blockquote>
+		<p>
+			This means that, by intercepting calls to the <code>glTexImage2D</code> function, we have
+			access to the pixel data of every texture as it gets loaded by the game. For this experiment,
+			I&#39;m going to directly modify this function in such a way that it writes the texture data
+			to a file.
+		</p>
+		<p>With the theory out of the way, let&#39;s start writing code!</p>
+		<p>
+			Like in the previous post, we have to modify a DLL. In Windows, OpenGL is implemented by the
+			<code>opengl32.dll</code> DLL file, which is located under
+			<code>C:\Windows\System32\opengl32.dll</code> for 64-bits and
+			<code>C:\Windows\SysWOW64\opengl32.dll</code> for 32-bits. In Proton, the source code for this
+			DLL is located under <code>wine/dlls/opengl32/</code>.
+		</p>
+		<p>
+			Let&#39;s start by looking for the implementation of the <code>glTexImage2D</code> function
+			with <code>$ grep --recursive --line-number &#39;glTexImage2D&#39; ./</code>. The first result
+			that seems interesting is a file called <code>thunks.c</code> at line 2489. Looking at this
+			line we see the following:
+			<code
+				>void WINAPI glTexImage2D( GLenum target, GLint level, GLint internalformat, GLsizei width,
+				GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels )</code
+			>. That&#39;s exactly what we want! There&#39;s a warning at the beginning of the file saying
+			something about not modifying the file. I&#39;m going to ignore it.
+		</p>
+		<blockquote>
+			<p>
+				Note: I had no idea what &quot;thunk&quot; means, so I looked it up on the Internet. From
+				Wikipedia:
+				<em
+					>In computer programming, a thunk is a subroutine used to inject a calculation into
+					another subroutine.</em
+				>
+				In this case, I assume the file is called <code>thunks.c</code> because it contains a bunch
+				of functions that do not actually do the calculations themselves and, instead, act as a
+				proxy between the API that Windows applications expect and what is actually available on
+				Linux.
+			</p>
+		</blockquote>
+		<h2 id="the-plan">The plan</h2>
+		<p>
+			Let&#39;s review our objective. We want to dump the textures that the game loads by
+			intercepting the OpenGL function calls. So, here&#39;s the plan:
+		</p>
+		<ol>
+			<li>
+				<em>Get the texture data.</em> This one is easy; we receive the texture data and the texture
+				size as parameters of the <code>glTexImage2D</code> function.
+			</li>
+			<li>
+				<em>Make sure the texture is in a supported format.</em> This one is optional. Basically,
+				check that the texture has a format that we expect (target, format and type). I&#39;m going
+				to skip this check for this particular instance, since every texture in this game has the
+				same format.
+			</li>
+			<li>
+				<em>Encode the texture.</em> Basically, transform the array of bytes we received into an
+				image format that we can easily open with a image-viewing program.
+			</li>
+			<li><em>Write the texture to a file.</em> Pretty self-explanatory.</li>
+			<li>
+				<em>Continue the execution</em>. Basically, after dumping the texture, we want to continue
+				with the normal execution of the code. Otherwise, the game would just dump one texture and
+				quit.
+			</li>
+		</ol>
+		<p>
+			For the first point, there&#39;s nothing extra we have to do, since we receive the texture
+			data as part of the arguments to the <code>glTexImage2D</code> function.
+		</p>
+		<p>
+			For the second point, we can put a simple if-statement that decides whether to attempt to dump
+			the texture or not depending on the texture format. As already stated, I&#39;m going to skip
+			this step.
+		</p>
+		<p>
+			The third point requires a lot more work. Using popular formats like PNG or JPEG would require
+			the use of an external library, due to the complexity of the these formats. The problem is
+			that I&#39;m not yet sure how to include extra dependencies when compiling Proton, which means
+			that I have to implement the encoder myself for now. Fortunately, there&#39;s an extremely
+			simple image format that is easy to encode, decode and is human-readable! I&#39;m talking
+			about the <a href="https://en.wikipedia.org/wiki/Netpbm">Portable Pixmap Format</a>! I&#39;m
+			going to get into the details of this format in this post, since the Wikipedia article
+			explains everything very clearly, but I&#39;m just going to leave this simple example of a 2x2
+			black and white checkerboard image:
+		</p>
+		<pre><code>P3          <span class="hljs-comment"># Magic number indicating an RGB image</span>
+		2<span class="hljs-number"> 2 </span>        <span class="hljs-comment"># Image size in the format "&lt; width &gt; &lt; height &gt;"</span>
+		255         <span class="hljs-comment"># The maximum value of each color component.</span>
+
+		<span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span><span class="hljs-comment"># Top-left black</span>
+		255<span class="hljs-number"> 255 </span>255 <span class="hljs-comment"># Top-right white</span>
+		255<span class="hljs-number"> 255 </span>255 <span class="hljs-comment"># Bottom-left white</span>
+		<span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span><span class="hljs-comment"># Bottom-right black</span>
+
+		<span class="hljs-comment"># Oh yeah, you can even use comments! ;)</span>
+		</code></pre>
+		<p>
+			Simply beautiful! Just copy-and-paste this text into a text file, save it as
+			<code>checkerboard.ppm</code> and voilà!
+		</p>
+		<p>
+			There&#39;s a few downsides to this format. The first is support: as far as I know, very few
+			programs actually support this format (GIMP is one of those programs. Gwenview from the KDE
+			project also supports it). The second issue is file size: the fact that there&#39;s no
+			compression and that each color value is specified using ASCII characters, means that files
+			will be quite large (4.2 MiB for a PNG and 70.3 MiB for a PPM of the same 3200x1813 image!).
+		</p>
+		<p>
+			The fourth point is to simply write our PPM-encoded texture to a file and, at the end,
+			continue with the program&#39;s normal execution.
+		</p>
+		<h2 id="the-execution">The execution</h2>
+		<p>Let&#39;s start by looking at how I changed the <code>glTexImage2D</code> function:</p>
+		<pre><code class="lang-C"><span class="hljs-keyword">void</span> WINAPI glTexImage2D( GLenum target, GLint level, GLint internalformat, GLsizei <span class="hljs-built_in">width</span>, GLsizei <span class="hljs-built_in">height</span>, GLint border, GLenum format, GLenum type, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *<span class="hljs-built_in">pixels</span> )
+		{
+			truct glTexImage2D_params args = { .teb = NtCurrentTeb(), .target = target, .level = level, .internalformat = internalformat, .<span class="hljs-built_in">width</span> = <span class="hljs-built_in">width</span>, .<span class="hljs-built_in">height</span> = <span class="hljs-built_in">height</span>, .border = border, .format = format, .type = type, .<span class="hljs-built_in">pixels</span> = <span class="hljs-built_in">pixels</span> };
+
+			NTSTATUS status;
+
+			<span class="hljs-comment">// The name of the file used to dump this texture</span>
+			<span class="hljs-built_in">char</span> dump_file_name[<span class="hljs-number">64</span>];
+
+			<span class="hljs-comment">// A counter that is incremented for each texture; used as a way to distinguish textures</span>
+			<span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> texture_counter = <span class="hljs-number">0</span>;
+
+			<span class="hljs-comment">// Generate the name of the file with the format "&lt; counter &gt;.ppm".</span>
+			sprintf(dump_file_name, <span class="hljs-string">"%d.ppm"</span>, texture_counter++);
+
+			<span class="hljs-comment">// Dump this texture to a file.</span>
+			dump_opengl_texture(dump_file_name, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, <span class="hljs-built_in">pixels</span>);
+
+			<span class="hljs-comment">// Write a message to the log.</span>
+			MESSAGE(<span class="hljs-string">"Dumped texture %s; format: %d; size: %dx%d; type: %d\n"</span>, dump_file_name, format, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, type);
+
+			TRACE( <span class="hljs-string">"target %d, level %d, internalformat %d, width %d, height %d, border %d, format %d, type %d, pixels %p\n"</span>, target, level, internalformat, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, border, format, type, <span class="hljs-built_in">pixels</span> );
+
+			<span class="hljs-keyword">if</span> ((status = UNIX_CALL( glTexImage2D, &amp;args ))) WARN( <span class="hljs-string">"glTexImage2D returned %#lx\n"</span>, status );
+		}
+		</code></pre>
+		<p>
+			Let&#39;s now implement the logic behind the <code>dump_opengl_texture</code> function in a
+			separate file:
+		</p>
+		<pre><code class="lang-C"><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> once</span>
+
+		<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> once</span>
+
+		<span class="hljs-keyword">void</span> dump_opengl_texture(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* dump_file_name, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> <span class="hljs-built_in">width</span>, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> <span class="hljs-built_in">height</span>, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span>* data)
+		{
+			<span class="hljs-comment">// Re-cast the void pointer into something we can actually use.</span>
+			<span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>* pixels = (<span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>*) data;
+
+			<span class="hljs-comment">// File handle.</span>
+			FILE* file = NULL;
+
+			<span class="hljs-comment">// Open the file for writing.</span>
+			file = fopen(dump_file_name, <span class="hljs-string">"w"</span>);
+
+			<span class="hljs-comment">// Write the image file header.</span>
+			fprintf(file, <span class="hljs-string">"P3\n"</span>);
+			fprintf(file, <span class="hljs-string">"%d %d\n"</span>, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>);
+			fprintf(file, <span class="hljs-string">"255\n"</span>);
+
+			<span class="hljs-built_in">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> y = <span class="hljs-number">0</span>; y &lt; <span class="hljs-built_in">height</span>; ++y)
+			{
+				<span class="hljs-built_in">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> x = <span class="hljs-number">0</span>; x &lt; <span class="hljs-built_in">width</span>; ++x)
+				{
+					<span class="hljs-comment">// For each pixel in the texture, write the RGB</span>
+					<span class="hljs-comment">//  components as "&lt; red &gt; &lt; green &gt; &lt; blue &gt;\n".</span>
+					fprintf(file, <span class="hljs-string">"%d %d %d\n"</span>,
+						pixels[<span class="hljs-number">0</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>],  <span class="hljs-comment">// Red</span>
+						pixels[<span class="hljs-number">1</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>],  <span class="hljs-comment">// Green</span>
+						pixels[<span class="hljs-number">2</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>]); <span class="hljs-comment">// Blue</span>
+				}
+			}
+
+			<span class="hljs-comment">// Close the file.</span>
+			fclose(file);
+		}
+		</code></pre>
+		<p>
+			A quick note on the way I index the pixels array inside the two for loops: since
+			<code>pixels</code> is a 1D array and a texture is a 2D matrix, we need to to some simple math
+			to transform a 2D index (<code>x</code> and <code>y</code>) into a 1D index. The formula is
+			pretty simple: <code>index = y * width + x</code>, where <code>index</code> is the resulting
+			1D index, <code>x</code> and <code>y</code> are the 2D index and <code>width</code> is the
+			width of the 2D matrix.
+		</p>
+		<p>
+			We also have to take into consideration the fact that the texture is made up of 4 components:
+			red, green, blue and alpha, but we are exporting the texture only as RGB without the alpha
+			channel. This is the reason for the <code>* 4</code> used to multiply the index, even though
+			we are only considering three components. I definitely didn&#39;t waste half an hour trying to
+			understand why the dumped textures were completely broken.
+		</p>
+		<p>
+			Let&#39;s not forget to include this file inside <code>thunks.c</code>. This is a matter of
+			simply adding the <code>#include &quot;dump_opengl_texture.h&quot;</code> directive at the top
+			of the <code>thunks.c</code> file, after the other include directives.
+		</p>
+		<p>Let&#39;s now compile and run the game with the changes!</p>
+		<h2 id="the-result">The result</h2>
+		<p>
+			As soon as I started the game, magic happened: a bunch of images were appearing in the
+			game&#39;s folder! Some were completely black, some were clearly used for particle effects and
+			other were the game character&#39;s deformed faces. It worked!
+		</p>
+		<p>
+			Writing a texture to disk using the PPM format results in the game freezing or slowing down
+			due to the large size of the files being written. If your game freezes or stutters, that is
+			probably normal.
+		</p>
+		<blockquote>
+			<p>
+				Note: In this game, the order in which the textures are loaded depends on the player&#39;s
+				actions. It is therefore not guaranteed that a texture is going to be dumped with the same
+				file name each time.
+			</p>
+		</blockquote>
+		<p>
+			And that&#39;s all for this second post of this series! We went from writing a simple message
+			to the log to dumping a game&#39;s textures! While the changes made and the code written were
+			small, I still had a ton of fun and was able to understand a lot about Wine/Proton. I&#39;m
+			still not sure what the next experiment will be about. Maybe I&#39;ll try to fix some of the
+			games in my Steam library that do not work on Linux. Until then, see you next time!
+		</p>
+		<p>
+			P.S.: I really like the idea of dumping a game&#39;s textures and I would like to expand it by
+			adding the possibility of loading textures from disk and replace the game&#39;s original
+			textures with textures of my own (different visual style? higher-definition textures? chaos?).
+			Maybe I can take this even further and replace stuff like shaders and meshes.
+		</p>
+	</body>
+</html>
