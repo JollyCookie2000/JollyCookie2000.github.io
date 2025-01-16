@@ -3,6 +3,10 @@
 	import AppManager from '$lib/AppManager.svelte';
 </script>
 
+<svelte:head>
+	<title>Lorenzo Adam Piazza</title>
+</svelte:head>
+
 <div class="window">
 	<AppManager app={LauncherApp} />
 </div>
