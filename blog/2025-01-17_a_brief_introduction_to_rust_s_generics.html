@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>A brief introduction to Rust's generics</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<h1 id="a-brief-introduction-to-rust-s-generics">
+			A brief introduction to Rust&#39;s generics
+		</h1>
+		<p>
+			I recently began learning how to use generics in Rust, and decided to write a brief blog post
+			explaining the absolute basics needed to get started with using and understanding generics in
+			Rust. The main objective of this post is to help you (and me) reason about generics.
+		</p>
+		<p>
+			This is in no way, shape or form a complete or in-depth guide to generics. The point of this
+			article is just to give reader an idea of what generics are and how they are used in practice
+			with a few really simple examples.
+		</p>
+		<p>
+			Generics can be used with functions, but also with structs. For simplicity, in this article
+			I&#39;m only going to go over how to use generic types in the context of functions.
+		</p>
+		<p>
+			The reader is expected to already have a basic understanding of at least Rust&#39;s traits.
+		</p>
+		<h2 id="a-simple-example">A simple example</h2>
+		<p>Let&#39;s start by taking a look at some very simple code:</p>
+		<pre><code class="lang-Rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value</span></span>(a: <span class="hljs-keyword">i32</span>) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_value(<span class="hljs-number">42</span>);
+}
+</code></pre>
+		<p>
+			In this example, we define a function called <code>print_value</code> that accepts one
+			argument of type <code>i32</code> (32-bit signed integers) of name <code>a</code> and returns
+			no value. Then, inside the <code>main</code> function, we call the
+			<code>print_value</code> function with the argument <code>42</code>.
+		</p>
+		<p>Running this code yields the following result:</p>
+		<pre><code><span class="hljs-attr">a</span> = <span class="hljs-number">42</span>
+</code></pre>
+		<blockquote>
+			<p>
+				By the way, the website <a href="https://play.rust-lang.org/">Rust Playground</a> allows you
+				to quickly and easily run Rust code in the browser, without having to create a Cargo project
+				or use rustc.
+			</p>
+		</blockquote>
+		<p>We now have a really simple function that prints a value of type <code>i32</code>!</p>
+		<p>
+			Let&#39;s say that we also want to be able to print a value of type <code>f64</code> (64-bit
+			floating point). How would we do this?
+		</p>
+		<p>
+			The simplest solution is to implement another function, similar to <code>print_value</code>,
+			that accepts an argument of type <code>f64</code> instead of <code>i32</code>. Here is the
+			example from before with the new function added:
+		</p>
+		<pre><code class="lang-Rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value_i32</span></span>(a: <span class="hljs-keyword">i32</span>) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value_f64</span></span>(a: <span class="hljs-keyword">f64</span>) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_value_i32(<span class="hljs-number">42</span>);
+	print_value_f64(<span class="hljs-number">3.14</span>);
+}
+</code></pre>
+		<p>
+			I also changed the name of the old <code>print_value</code> function to
+			<code>print_value_i32</code> to avoid naming collisions.
+		</p>
+		<p>As expected, running this code yields the following result:</p>
+		<pre><code><span class="hljs-attr">a</span> = <span class="hljs-number">42</span>
+<span class="hljs-attr">a</span> = <span class="hljs-number">3.14</span>
+</code></pre>
+		<h2 id="the-problem">The problem</h2>
+		<p>
+			In the previous example, we addressed the challenge of executing the same operation over
+			different data types by just copy-pasting a function and changing the types of its arguments
+			and return value.
+		</p>
+		<p>
+			What if we need to print a value of <code>i64</code>? And <code>u8</code>? We could keep
+			copy-pasting the same <code>print_value</code> function over and over again for each data type
+			we want to print. This, however, introduces a few issues:
+		</p>
+		<ul>
+			<li>We are repeating the same code over and over again.</li>
+			<li>
+				If we have many data types, we are going to end up with a large number of almost identical
+				functions.
+			</li>
+			<li>
+				If we wanted to change the behavior of the <code>print_value</code> functions, we would have
+				to make the same change in every copy of the function we have implemented.
+			</li>
+		</ul>
+		<p>
+			How do we solve this problem? Since we are effectively just copy-pasting the same code,
+			wouldn&#39;t it be nice if there a way to let the compiler to the copy-pasting automatically
+			for us, so that we only have to write only one <code>print_value</code> function?
+		</p>
+		<h2 id="the-solution">The solution</h2>
+		<p>This is where generics come in to save the day.</p>
+		<p>
+			Generics are a feature of some programming languages that allow developers to write code that
+			can operate over different data types (i.e. generic code),
+			<strong>while still allowing the compiler to guarantee type safety</strong>.
+		</p>
+		<p>
+			Let&#39;s see how we can rewrite the previous example using generics to avoid duplication:
+		</p>
+		<pre><code class="lang-Rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value</span></span>&lt;T&gt;(a: T) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_value(<span class="hljs-number">42</span>);
+	print_value(<span class="hljs-number">3.14</span>);
+}
+</code></pre>
+		<p>
+			In this example, I have rewritten the <code>print_value</code> function so that it accepts a
+			single generic parameter of type <code>T</code>.
+		</p>
+		<p>
+			The only weird syntax we encounter in this example is the <code>&lt;T&gt;</code> after the
+			name of the function. The <code>&lt;&gt;</code> are used to list and describe the generic
+			arguments that the function accepts. If we were to remove the <code>T</code> from inside the
+			<code>&lt;&gt;</code>, we would get a compilation error where the compiler tells us that the
+			type <code>T</code> does not exist.
+		</p>
+		<blockquote>
+			<p>
+				A note: the name <code>T</code> is just a convention. We can name generic types whatever we
+				want.
+			</p>
+		</blockquote>
+		<p>
+			The compiler, however, does not allow us to compile this code and gives us the following
+			error:
+		</p>
+		<pre><code>   Compiling playground v0.0.1 (/playground)
+<span class="hljs-keyword">error</span>[E0277]: `T` doesn't implement `std::fmt::<span class="hljs-keyword">Display</span>`
+--&gt; src/main.rs:2:21
+|
+2 |     println!(<span class="hljs-string">"a = {}"</span>, a);
+|                        ^ `T` cannot be formatted with the default formatter
+|
+= <span class="hljs-keyword">note</span>: <span class="hljs-keyword">in</span> <span class="hljs-keyword">format</span> strings you may be able to <span class="hljs-keyword">use</span> `{:?}` (or {:#?} <span class="hljs-keyword">for</span> pretty-<span class="hljs-keyword">print</span>) instead
+= <span class="hljs-keyword">note</span>: this <span class="hljs-keyword">error</span> originates <span class="hljs-keyword">in</span> the <span class="hljs-keyword">macro</span> `<span class="hljs-variable">$crate</span>::format_args_nl` <span class="hljs-keyword">which</span> comes from the expansion of the <span class="hljs-keyword">macro</span> `println` (<span class="hljs-keyword">in</span> Nightly builds, <span class="hljs-keyword">run</span> with -Z <span class="hljs-keyword">macro</span>-backtrace <span class="hljs-keyword">for</span> <span class="hljs-keyword">more</span> info)
+<span class="hljs-keyword">help</span>: consider restricting <span class="hljs-keyword">type</span> parameter `T`
+|
+1 | fn print_value&lt;T: std::fmt::<span class="hljs-keyword">Display</span>&gt;(a: T) {
+|                 +++++++++++++++++++
+
+<span class="hljs-keyword">For</span> <span class="hljs-keyword">more</span> information <span class="hljs-keyword">about</span> this <span class="hljs-keyword">error</span>, try `rustc --explain E0277`.
+<span class="hljs-keyword">error</span>: could not compile `playground` (bin <span class="hljs-string">"playground"</span>) due to 1 previous <span class="hljs-keyword">error</span>
+</code></pre>
+		<p>
+			With this error, the compiler is telling us that we are trying to execute an operation
+			(printing) on a type that does not support it. Why does this happen?
+		</p>
+		<p>
+			In the function signature, we have specified that the generic type <code>T</code> exists, and
+			nothing else. What is <code>T</code>? What functionality does it have? How is the compiler
+			supposed to know how to print a value of type <code>T</code>? As it currently stands, the
+			compiler has no way of determining how to do anything useful with <code>T</code>.
+		</p>
+		<p>Fortunately, the compiler gives us a suggestion:</p>
+		<pre><code>...
+help: consider restricting type parameter `T`
+|
+<span class="hljs-number">1</span> | fn print_value&lt;T: std::fmt::Display&gt;(a: T) {
+|                 +++++++++++++++++++
+...
+</code></pre>
+		<p>
+			When try to print a value, the compiler makes sure that the type of the value implements the
+			<code>Display</code> trait. The <code>Display</code> trait allows a data type to specify how
+			it should be represented and formatted visually when printed to the console.
+		</p>
+		<p>
+			This means that we somehow need to guarantee that the type <code>T</code> implements at least
+			the <code>Display</code> trait. We can do this in the following way:
+		</p>
+		<pre><code class="lang-Rust"><span class="hljs-keyword">use</span> std::fmt::Display;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value</span></span>&lt;T: Display&gt;(a: T) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_value(<span class="hljs-number">42</span>);
+	print_value(<span class="hljs-number">3.14</span>);
+}
+</code></pre>
+		<p>
+			Here, we have defined a function called <code>print_value</code> that accepts an argument of
+			any type, as long as that type implements the <code>std::fmt::Display</code> trait.
+		</p>
+		<p>Running this example yields the following output:</p>
+		<pre><code><span class="hljs-attr">a</span> = <span class="hljs-number">42</span>
+<span class="hljs-attr">a</span> = <span class="hljs-number">3.14</span>
+</code></pre>
+		<hr />
+		<p>
+			It is possible to specify that the generic type <code>T</code> must implement multiple traits
+			by using the following syntax: <code>&lt;T: Trait1 + Trait2&gt;</code>.
+		</p>
+		<p>It is also possible to define multiple generic types for a single function:</p>
+		<pre><code class="lang-Rust"><span class="hljs-keyword">use</span> std::fmt::Display;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_values</span></span>&lt;T: Display, U: Display&gt;(a: T, b: U) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"b = {}"</span>, b);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_values(<span class="hljs-number">42</span>, <span class="hljs-string">"Hello, World!"</span>);
+}
+</code></pre>
+		<p>Output:</p>
+		<pre><code><span class="hljs-attr">a</span> = <span class="hljs-number">42</span>
+<span class="hljs-attr">b</span> = Hello, World!
+</code></pre>
+		<hr />
+		<p>
+			There&#39;s an alternative syntax that works better when the list of generic types starts to
+			become too long and difficult to read:
+		</p>
+		<pre><code class="lang-Rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">do_stuff</span></span>&lt;T, U&gt;(a: T, b: U) -&gt; U
+<span class="hljs-keyword">where</span>
+	T: Trait2, <span class="hljs-comment">// Traits that the generic type T must implement.</span>
+	U: Trait1 <span class="hljs-comment">// Traits that the generic type U must implement.</span>
+{
+	<span class="hljs-comment">// Code ...</span>
+}
+</code></pre>
+		<hr />
+		<p>
+			Until now, we have only used generics as argument types. However, we are free to return a
+			generic type, as well as to create local variables of a generic type.
+		</p>
+		<p>
+			In addition, generic types only exist withing the scope of the function that defines them.
+			This means that e can&#39;t use the generic type <code>T</code> defined in the
+			<code>print_value</code> function to create a variable of the same type <code>T</code> in the
+			main function.
+		</p>
+		<p>
+			As an exercise, try now to implement a function that takes two generic arguments (both of the
+			same type) and return their sum. You can easily ask for help to your local friendly LLM and it
+			will provide you with the correct solution.
+		</p>
+		<h2 id="behind-the-scenes">Behind the scenes</h2>
+		<p>
+			How exactly do generics work? As I have hinted before, when we use generics, the compiler
+			copy-pastes the generic function for each different data type we use. In other words, the
+			compiler compiles a generic function multiple times, each time replacing the generic type with
+			a concrete type. Let&#39;s take one of the previous examples:
+		</p>
+		<pre><code class="lang-Rust"><span class="hljs-keyword">use</span> std::fmt::Display;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value</span></span>&lt;T: Display&gt;(a: T) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_value(<span class="hljs-number">42</span>);
+	print_value(<span class="hljs-number">3.14</span>);
+}
+</code></pre>
+		<p>
+			When going over the code, the compiler sees that we are calling the
+			<code>print_value</code> function with two different data types: <code>i32</code> (for the
+			value 42) and <code>f64</code> (for the value 3.14). In other words, the following is what
+			gets compiled into the final binary:
+		</p>
+		<pre><code class="lang-Rust"><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value_i32</span></span>(a: <span class="hljs-keyword">i32</span>) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value_f64</span></span>(a: <span class="hljs-keyword">f64</span>) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_value_i32(<span class="hljs-number">42</span>);
+	print_value_f64(<span class="hljs-number">3.14</span>);
+}
+</code></pre>
+		<hr />
+		<p>
+			Just for fun, let&#39;s take a brief look behind the scenes. For this, I&#39;m going to be
+			using <a href="https://godbolt.org">Compiler Explorer</a>, a tool that allows you to see the
+			assembly of a compiled program.
+		</p>
+		<p>
+			Inside Compiler Explorer, we set the language to <em>Rust</em> instead of the default
+			<em>C++</em> and then we paste the following code inside the text area on the left (be sure to
+			include the <code>pub</code> keyword, otherwise there would be no output):
+		</p>
+		<pre><code class="lang-Rust"><span class="hljs-keyword">use</span> std::fmt::Display;
+
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">print_value</span></span>&lt;T: Display&gt;(a: T) {
+	<span class="hljs-built_in">println!</span>(<span class="hljs-string">"a = {}"</span>, a);
+}
+
+<span class="hljs-keyword">pub</span> <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+	print_value(<span class="hljs-number">42</span>);
+	print_value(<span class="hljs-number">3.14</span>);
+}
+</code></pre>
+		<p>
+			On the right side of the window, we will see a bunch of Assembly code appearing. It is not
+			necessary to be able to understand all of that code. There&#39;s only a couple of lines that
+			we are actually interested in.
+		</p>
+		<p>
+			Among the output, we will see two lines that start with
+			<code>example::print_value::</code> followed by a bunch of symbols. Those are our
+			<code>print_value</code> functions and, as expected, there&#39;s two of them. If we scroll a
+			little bit, we will even see the text <code>impl core::fmt::Display for i32</code> and
+			<code>impl core::fmt::Display for f64</code>, the two data types we called the function with.
+			Try to call <code>print_value</code> with another type, like a string, and see ho the output
+			changes!
+		</p>
+		<p>
+			Do keep in mind that, the more we use generics, the slower compilation times will be and the
+			larger the final binary will be!
+		</p>
+		<h2 id="considerations">Considerations</h2>
+		<p>There&#39;s a few important things to consider when using generics:</p>
+		<ul>
+			<li>
+				As we have seen before, the compiler generates code for every data type we use. This means
+				that, the more types we use, the slower the compilation times and the larger the final
+				binary will be.
+			</li>
+		</ul>
+		<h2 id="conclusions">Conclusions</h2>
+		<p>
+			Hopefully you now see how powerful generics can be if used appropriately! This post only
+			scratched the surface of what you can do with this powerful Rust feature.
+		</p>
+		<p>
+			Now that you have a basic understanding of generics, I wish you good luck on your learning
+			journey!
+		</p>
+	</body>
+</html>

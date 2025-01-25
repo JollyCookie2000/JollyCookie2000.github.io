@@ -4,20 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Steam Proton #02 - Dumping OpenGL textures</title>
-		<style>
-			body {
-				color: #2f3640;
-			}
-
-			h1 {
-				font-size: 1.7rem;
-			}
-
-			a,
-			p {
-				font-size: 1.5rem;
-			}
-		</style>
+		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
 		<h1 id="steam-proton-02-dumping-opengl-textures">Steam Proton #02 - Dumping OpenGL textures</h1>
@@ -174,16 +161,16 @@
 			black and white checkerboard image:
 		</p>
 		<pre><code>P3          <span class="hljs-comment"># Magic number indicating an RGB image</span>
-		2<span class="hljs-number"> 2 </span>        <span class="hljs-comment"># Image size in the format "&lt; width &gt; &lt; height &gt;"</span>
-		255         <span class="hljs-comment"># The maximum value of each color component.</span>
+2<span class="hljs-number"> 2 </span>        <span class="hljs-comment"># Image size in the format "&lt; width &gt; &lt; height &gt;"</span>
+255         <span class="hljs-comment"># The maximum value of each color component.</span>
 
-		<span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span><span class="hljs-comment"># Top-left black</span>
-		255<span class="hljs-number"> 255 </span>255 <span class="hljs-comment"># Top-right white</span>
-		255<span class="hljs-number"> 255 </span>255 <span class="hljs-comment"># Bottom-left white</span>
-		<span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span><span class="hljs-comment"># Bottom-right black</span>
+<span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span><span class="hljs-comment"># Top-left black</span>
+255<span class="hljs-number"> 255 </span>255 <span class="hljs-comment"># Top-right white</span>
+255<span class="hljs-number"> 255 </span>255 <span class="hljs-comment"># Bottom-left white</span>
+<span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span> <span class="hljs-number"> 0 </span><span class="hljs-comment"># Bottom-right black</span>
 
-		<span class="hljs-comment"># Oh yeah, you can even use comments! ;)</span>
-		</code></pre>
+<span class="hljs-comment"># Oh yeah, you can even use comments! ;)</span>
+</code></pre>
 		<p>
 			Simply beautiful! Just copy-and-paste this text into a text file, save it as
 			<code>checkerboard.ppm</code> and voilà!
@@ -202,72 +189,72 @@
 		<h2 id="the-execution">The execution</h2>
 		<p>Let&#39;s start by looking at how I changed the <code>glTexImage2D</code> function:</p>
 		<pre><code class="lang-C"><span class="hljs-keyword">void</span> WINAPI glTexImage2D( GLenum target, GLint level, GLint internalformat, GLsizei <span class="hljs-built_in">width</span>, GLsizei <span class="hljs-built_in">height</span>, GLint border, GLenum format, GLenum type, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *<span class="hljs-built_in">pixels</span> )
-		{
-			truct glTexImage2D_params args = { .teb = NtCurrentTeb(), .target = target, .level = level, .internalformat = internalformat, .<span class="hljs-built_in">width</span> = <span class="hljs-built_in">width</span>, .<span class="hljs-built_in">height</span> = <span class="hljs-built_in">height</span>, .border = border, .format = format, .type = type, .<span class="hljs-built_in">pixels</span> = <span class="hljs-built_in">pixels</span> };
+{
+	truct glTexImage2D_params args = { .teb = NtCurrentTeb(), .target = target, .level = level, .internalformat = internalformat, .<span class="hljs-built_in">width</span> = <span class="hljs-built_in">width</span>, .<span class="hljs-built_in">height</span> = <span class="hljs-built_in">height</span>, .border = border, .format = format, .type = type, .<span class="hljs-built_in">pixels</span> = <span class="hljs-built_in">pixels</span> };
 
-			NTSTATUS status;
+	NTSTATUS status;
 
-			<span class="hljs-comment">// The name of the file used to dump this texture</span>
-			<span class="hljs-built_in">char</span> dump_file_name[<span class="hljs-number">64</span>];
+	<span class="hljs-comment">// The name of the file used to dump this texture</span>
+	<span class="hljs-built_in">char</span> dump_file_name[<span class="hljs-number">64</span>];
 
-			<span class="hljs-comment">// A counter that is incremented for each texture; used as a way to distinguish textures</span>
-			<span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> texture_counter = <span class="hljs-number">0</span>;
+	<span class="hljs-comment">// A counter that is incremented for each texture; used as a way to distinguish textures</span>
+	<span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> texture_counter = <span class="hljs-number">0</span>;
 
-			<span class="hljs-comment">// Generate the name of the file with the format "&lt; counter &gt;.ppm".</span>
-			sprintf(dump_file_name, <span class="hljs-string">"%d.ppm"</span>, texture_counter++);
+	<span class="hljs-comment">// Generate the name of the file with the format "&lt; counter &gt;.ppm".</span>
+	sprintf(dump_file_name, <span class="hljs-string">"%d.ppm"</span>, texture_counter++);
 
-			<span class="hljs-comment">// Dump this texture to a file.</span>
-			dump_opengl_texture(dump_file_name, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, <span class="hljs-built_in">pixels</span>);
+	<span class="hljs-comment">// Dump this texture to a file.</span>
+	dump_opengl_texture(dump_file_name, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, <span class="hljs-built_in">pixels</span>);
 
-			<span class="hljs-comment">// Write a message to the log.</span>
-			MESSAGE(<span class="hljs-string">"Dumped texture %s; format: %d; size: %dx%d; type: %d\n"</span>, dump_file_name, format, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, type);
+	<span class="hljs-comment">// Write a message to the log.</span>
+	MESSAGE(<span class="hljs-string">"Dumped texture %s; format: %d; size: %dx%d; type: %d\n"</span>, dump_file_name, format, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, type);
 
-			TRACE( <span class="hljs-string">"target %d, level %d, internalformat %d, width %d, height %d, border %d, format %d, type %d, pixels %p\n"</span>, target, level, internalformat, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, border, format, type, <span class="hljs-built_in">pixels</span> );
+	TRACE( <span class="hljs-string">"target %d, level %d, internalformat %d, width %d, height %d, border %d, format %d, type %d, pixels %p\n"</span>, target, level, internalformat, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>, border, format, type, <span class="hljs-built_in">pixels</span> );
 
-			<span class="hljs-keyword">if</span> ((status = UNIX_CALL( glTexImage2D, &amp;args ))) WARN( <span class="hljs-string">"glTexImage2D returned %#lx\n"</span>, status );
-		}
-		</code></pre>
+	<span class="hljs-keyword">if</span> ((status = UNIX_CALL( glTexImage2D, &amp;args ))) WARN( <span class="hljs-string">"glTexImage2D returned %#lx\n"</span>, status );
+}
+</code></pre>
 		<p>
 			Let&#39;s now implement the logic behind the <code>dump_opengl_texture</code> function in a
 			separate file:
 		</p>
 		<pre><code class="lang-C"><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> once</span>
 
-		<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> once</span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> once</span>
 
-		<span class="hljs-keyword">void</span> dump_opengl_texture(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* dump_file_name, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> <span class="hljs-built_in">width</span>, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> <span class="hljs-built_in">height</span>, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span>* data)
+<span class="hljs-keyword">void</span> dump_opengl_texture(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span>* dump_file_name, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> <span class="hljs-built_in">width</span>, <span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> <span class="hljs-built_in">height</span>, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span>* data)
+{
+	<span class="hljs-comment">// Re-cast the void pointer into something we can actually use.</span>
+	<span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>* pixels = (<span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>*) data;
+
+	<span class="hljs-comment">// File handle.</span>
+	FILE* file = NULL;
+
+	<span class="hljs-comment">// Open the file for writing.</span>
+	file = fopen(dump_file_name, <span class="hljs-string">"w"</span>);
+
+	<span class="hljs-comment">// Write the image file header.</span>
+	fprintf(file, <span class="hljs-string">"P3\n"</span>);
+	fprintf(file, <span class="hljs-string">"%d %d\n"</span>, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>);
+	fprintf(file, <span class="hljs-string">"255\n"</span>);
+
+	<span class="hljs-built_in">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> y = <span class="hljs-number">0</span>; y &lt; <span class="hljs-built_in">height</span>; ++y)
+	{
+		<span class="hljs-built_in">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> x = <span class="hljs-number">0</span>; x &lt; <span class="hljs-built_in">width</span>; ++x)
 		{
-			<span class="hljs-comment">// Re-cast the void pointer into something we can actually use.</span>
-			<span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>* pixels = (<span class="hljs-keyword">const</span> <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span>*) data;
-
-			<span class="hljs-comment">// File handle.</span>
-			FILE* file = NULL;
-
-			<span class="hljs-comment">// Open the file for writing.</span>
-			file = fopen(dump_file_name, <span class="hljs-string">"w"</span>);
-
-			<span class="hljs-comment">// Write the image file header.</span>
-			fprintf(file, <span class="hljs-string">"P3\n"</span>);
-			fprintf(file, <span class="hljs-string">"%d %d\n"</span>, <span class="hljs-built_in">width</span>, <span class="hljs-built_in">height</span>);
-			fprintf(file, <span class="hljs-string">"255\n"</span>);
-
-			<span class="hljs-built_in">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> y = <span class="hljs-number">0</span>; y &lt; <span class="hljs-built_in">height</span>; ++y)
-			{
-				<span class="hljs-built_in">for</span> (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> x = <span class="hljs-number">0</span>; x &lt; <span class="hljs-built_in">width</span>; ++x)
-				{
-					<span class="hljs-comment">// For each pixel in the texture, write the RGB</span>
-					<span class="hljs-comment">//  components as "&lt; red &gt; &lt; green &gt; &lt; blue &gt;\n".</span>
-					fprintf(file, <span class="hljs-string">"%d %d %d\n"</span>,
-						pixels[<span class="hljs-number">0</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>],  <span class="hljs-comment">// Red</span>
-						pixels[<span class="hljs-number">1</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>],  <span class="hljs-comment">// Green</span>
-						pixels[<span class="hljs-number">2</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>]); <span class="hljs-comment">// Blue</span>
-				}
-			}
-
-			<span class="hljs-comment">// Close the file.</span>
-			fclose(file);
+			<span class="hljs-comment">// For each pixel in the texture, write the RGB</span>
+			<span class="hljs-comment">//  components as "&lt; red &gt; &lt; green &gt; &lt; blue &gt;\n".</span>
+			fprintf(file, <span class="hljs-string">"%d %d %d\n"</span>,
+				pixels[<span class="hljs-number">0</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>],  <span class="hljs-comment">// Red</span>
+				pixels[<span class="hljs-number">1</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>],  <span class="hljs-comment">// Green</span>
+				pixels[<span class="hljs-number">2</span> + y * <span class="hljs-built_in">width</span> * <span class="hljs-number">4</span> + x * <span class="hljs-number">4</span>]); <span class="hljs-comment">// Blue</span>
 		}
-		</code></pre>
+	}
+
+	<span class="hljs-comment">// Close the file.</span>
+	fclose(file);
+}
+</code></pre>
 		<p>
 			A quick note on the way I index the pixels array inside the two for loops: since
 			<code>pixels</code> is a 1D array and a texture is a 2D matrix, we need to to some simple math
