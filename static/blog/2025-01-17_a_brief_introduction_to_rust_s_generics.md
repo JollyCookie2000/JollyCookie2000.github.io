@@ -68,9 +68,9 @@ In the previous example, we addressed the challenge of executing the same operat
 
 What if we need to print a value of `i64`? And `u8`? We could keep copy-pasting the same `print_value` function over and over again for each data type we want to print. This, however, introduces a few issues:
 
-* We are repeating the same code over and over again.
-* If we have many data types, we are going to end up with a large number of almost identical functions.
-* If we wanted to change the behavior of the `print_value` functions, we would have to make the same change in every copy of the function we have implemented.
+- We are repeating the same code over and over again.
+- If we have many data types, we are going to end up with a large number of almost identical functions.
+- If we wanted to change the behavior of the `print_value` functions, we would have to make the same change in every copy of the function we have implemented.
 
 How do we solve this problem? Since we are effectively just copy-pasting the same code, wouldn't it be nice if there a way to let the compiler to the copy-pasting automatically for us, so that we only have to write only one `print_value` function?
 
@@ -247,7 +247,7 @@ fn main() {
 
 Just for fun, let's take a brief look behind the scenes. For this, I'm going to be using [Compiler Explorer](https://godbolt.org), a tool that allows you to see the assembly of a compiled program.
 
-Inside Compiler Explorer, we set the language to *Rust* instead of the default *C++* and then we paste the following code inside the text area on the left (be sure to include the `pub` keyword, otherwise there would be no output):
+Inside Compiler Explorer, we set the language to _Rust_ instead of the default _C++_ and then we paste the following code inside the text area on the left (be sure to include the `pub` keyword, otherwise there would be no output):
 
 ```Rust
 use std::fmt::Display;
@@ -272,7 +272,7 @@ Do keep in mind that, the more we use generics, the slower compilation times wil
 
 There's a few important things to consider when using generics:
 
-* As we have seen before, the compiler generates code for every data type we use. This means that, the more types we use, the slower the compilation times and the larger the final binary will be.
+- As we have seen before, the compiler generates code for every data type we use. This means that, the more types we use, the slower the compilation times and the larger the final binary will be.
 
 ## Conclusions
 
