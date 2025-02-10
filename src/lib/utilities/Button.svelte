@@ -3,8 +3,8 @@
 		text = '',
 		on_click = () => {}
 	}: {
-		text: string;
-		on_click: () => void;
+		text?: string;
+		on_click?: () => void;
 	} = $props();
 </script>
 
