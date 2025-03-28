@@ -54,7 +54,9 @@
 	}
 
 	.button-home img {
-		height: 100%;
+		/* For some reason, setting this any higher creates some weird spacing,
+		making the page scrollable. */
+		height: 92%;
 	}
 
 	.screen {
