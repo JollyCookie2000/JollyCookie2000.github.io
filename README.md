@@ -1,19 +1,39 @@
-# blog-website
+# Blog Website
 
-My very own personal website!
+This is the source code for my personal website which you can find [here](https://jollycookie2000.github.io).
 
-![](./screenshot.png)
-
-This is an entirely static website built with SvelteKit designed to be served through GitHub pages.
+This is an entirely static website built using the [Jekyll](https://jekyllrb.com) static website generator.
 
 ## Requirements
 
-Building this project requires only NodeJS's **NPM**. On Fedora Linux, NPM is installed together with the NodeJS pacakge: `# dnf install nodejs`.
+Jekyll is required to build the website locally. You can install Jekyll on Fedora Linux with the following command:
+
+```Bash
+sudo dnf install rubygem-jekyll
+```
 
 ## Building
 
-1. Install all the NodeJS dependencies with `$ npm install`.
+The website is automatically built and deployed by GitHub Actions.
 
-2. Build the project with `$ npm run build`.
+You can build the website locally with the following command:
 
-The built website will be located in the `build/` directory.
+```Bash
+jekyll build
+```
+
+This will create the directory `_site/` inside which you can find the generated website.
+
+You can also run the website locally for development purposes by running the following command:
+
+```Bash
+jekyll serve --drafts --livereload
+```
+
+You can now access the website at `http://localhost:4000`.
+
+Once you have applied your changes, run the following command to verify if there are any configuration issues:
+
+```Bash
+jekyll doctor
+```

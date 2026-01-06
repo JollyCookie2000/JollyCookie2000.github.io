@@ -1,4 +1,9 @@
-# A brief introduction to Rust's generics
+---
+author: "Lorenzo A. Piazza"
+layout: post
+title:  "A brief introduction to Rust's generics"
+date:   2025-01-17 20:04:40 +0100
+---
 
 I recently began learning how to use generics in Rust, and decided to write a brief blog post explaining the absolute basics needed to get started with using and understanding generics in Rust. The main objective of this post is to help you (and me) reason about generics.
 

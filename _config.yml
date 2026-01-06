@@ -1,0 +1,20 @@
+author:
+  name: "Lorenzo A. Piazza"
+description: >-
+  This is my personal website, where I share stuff about my projects and experiments.
+minima:
+  social_links:
+    - url: "https://bitbucket.org/lorenzo_adam_piazza"
+      title: "lorenzo_adam_piazza (BitBucket)"
+      icon: "bitbucket"
+    - url: "https://github.com/JollyCookie2000"
+      title: "JollyCookie2000 (GitHub)"
+      icon: "github"
+    - url: "https://linkedin.com/in/lorenzo-adam-piazza"
+      title: "lorenzo-adam-piazza (LinkedIn)"
+      icon: "linkedin"
+plugins:
+  - "jekyll-feed"
+theme: "minima"
+title: "Lorenzo's Website"
+url: "https://jollycookie2000.github.io/"
