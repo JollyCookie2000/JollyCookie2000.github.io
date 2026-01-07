@@ -37,7 +37,7 @@ The way Wine (and, as a consequence, Proton) is by re-implementing many of the D
 
 Let's move onto the next point: we need to find a way to print stuff to the log file. As I said before, `printf` is not available and as such, we need to look somewhere else. Fortunately, Wine puts at our disposal a series of functions to help with logging, one for each log level (trace, warn, err, fixme). These functions are defined in the `wine/include/wine/debug.h`:
 
-{% highlight C %}
+{% highlight C linenos %}
 #define TRACE                      WINE_TRACE
 #define TRACE_(ch)                 WINE_TRACE_(ch)
 #define TRACE_ON(ch)               WINE_TRACE_ON(ch)

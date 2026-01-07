@@ -17,7 +17,7 @@ The reader is expected to already have a basic understanding of at least Rust's 
 
 Let's start by taking a look at some very simple code:
 
-```Rust
+{% highlight rust linenos %}
 fn print_value(a: i32) {
 	println!("a = {}", a);
 }
@@ -25,7 +25,7 @@ fn print_value(a: i32) {
 fn main() {
 	print_value(42);
 }
-```
+{% endhighlight %}
 
 In this example, we define a function called `print_value` that accepts one argument of type `i32` (32-bit signed integers) of name `a` and returns no value. Then, inside the `main` function, we call the `print_value` function with the argument `42`.
 
@@ -43,7 +43,7 @@ Let's say that we also want to be able to print a value of type `f64` (64-bit fl
 
 The simplest solution is to implement another function, similar to `print_value`, that accepts an argument of type `f64` instead of `i32`. Here is the example from before with the new function added:
 
-```Rust
+{% highlight rust linenos %}
 fn print_value_i32(a: i32) {
 	println!("a = {}", a);
 }
@@ -56,7 +56,7 @@ fn main() {
 	print_value_i32(42);
 	print_value_f64(3.14);
 }
-```
+{% endhighlight %}
 
 I also changed the name of the old `print_value` function to `print_value_i32` to avoid naming collisions.
 
@@ -87,7 +87,7 @@ Generics are a feature of some programming languages that allow developers to wr
 
 Let's see how we can rewrite the previous example using generics to avoid duplication:
 
-```Rust
+{% highlight rust linenos %}
 fn print_value<T>(a: T) {
 	println!("a = {}", a);
 }
@@ -96,7 +96,7 @@ fn main() {
 	print_value(42);
 	print_value(3.14);
 }
-```
+{% endhighlight %}
 
 In this example, I have rewritten the `print_value` function so that it accepts a single generic parameter of type `T`.
 
@@ -144,7 +144,7 @@ When try to print a value, the compiler makes sure that the type of the value im
 
 This means that we somehow need to guarantee that the type `T` implements at least the `Display` trait. We can do this in the following way:
 
-```Rust
+{% highlight rust linenos %}
 use std::fmt::Display;
 
 fn print_value<T: Display>(a: T) {
@@ -155,7 +155,7 @@ fn main() {
 	print_value(42);
 	print_value(3.14);
 }
-```
+{% endhighlight %}
 
 Here, we have defined a function called `print_value` that accepts an argument of any type, as long as that type implements the `std::fmt::Display` trait.
 
@@ -172,7 +172,7 @@ It is possible to specify that the generic type `T` must implement multiple trai
 
 It is also possible to define multiple generic types for a single function:
 
-```Rust
+{% highlight rust linenos %}
 use std::fmt::Display;
 
 fn print_values<T: Display, U: Display>(a: T, b: U) {
@@ -183,7 +183,7 @@ fn print_values<T: Display, U: Display>(a: T, b: U) {
 fn main() {
 	print_values(42, "Hello, World!");
 }
-```
+{% endhighlight %}
 
 Output:
 
@@ -196,7 +196,7 @@ b = Hello, World!
 
 There's an alternative syntax that works better when the list of generic types starts to become too long and difficult to read:
 
-```Rust
+{% highlight rust linenos %}
 fn do_stuff<T, U>(a: T, b: U) -> U
 where
 	T: Trait2, // Traits that the generic type T must implement.
@@ -204,7 +204,7 @@ where
 {
 	// Code ...
 }
-```
+{% endhighlight %}
 
 ---
 
@@ -218,7 +218,7 @@ As an exercise, try now to implement a function that takes two generic arguments
 
 How exactly do generics work? As I have hinted before, when we use generics, the compiler copy-pastes the generic function for each different data type we use. In other words, the compiler compiles a generic function multiple times, each time replacing the generic type with a concrete type. Let's take one of the previous examples:
 
-```Rust
+{% highlight rust linenos %}
 use std::fmt::Display;
 
 fn print_value<T: Display>(a: T) {
@@ -229,11 +229,11 @@ fn main() {
 	print_value(42);
 	print_value(3.14);
 }
-```
+{% endhighlight %}
 
 When going over the code, the compiler sees that we are calling the `print_value` function with two different data types: `i32` (for the value 42) and `f64` (for the value 3.14). In other words, the following is what gets compiled into the final binary:
 
-```Rust
+{% highlight rust linenos %}
 fn print_value_i32(a: i32) {
 	println!("a = {}", a);
 }
@@ -246,7 +246,7 @@ fn main() {
 	print_value_i32(42);
 	print_value_f64(3.14);
 }
-```
+{% endhighlight %}
 
 ---
 
@@ -254,7 +254,7 @@ Just for fun, let's take a brief look behind the scenes. For this, I'm going to 
 
 Inside Compiler Explorer, we set the language to _Rust_ instead of the default _C++_ and then we paste the following code inside the text area on the left (be sure to include the `pub` keyword, otherwise there would be no output):
 
-```Rust
+{% highlight rust linenos %}
 use std::fmt::Display;
 
 fn print_value<T: Display>(a: T) {
@@ -265,7 +265,7 @@ pub fn main() {
 	print_value(42);
 	print_value(3.14);
 }
-```
+{% endhighlight %}
 
 On the right side of the window, we will see a bunch of Assembly code appearing. It is not necessary to be able to understand all of that code. There's only a couple of lines that we are actually interested in.
 

@@ -71,7 +71,7 @@ The fourth point is to simply write our PPM-encoded texture to a file and, at th
 
 Let's start by looking at how I changed the `glTexImage2D` function:
 
-{% highlight C %}
+{% highlight C linenos %}
 void WINAPI glTexImage2D( GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels )
 {
 	truct glTexImage2D_params args = { .teb = NtCurrentTeb(), .target = target, .level = level, .internalformat = internalformat, .width = width, .height = height, .border = border, .format = format, .type = type, .pixels = pixels };
@@ -101,7 +101,7 @@ void WINAPI glTexImage2D( GLenum target, GLint level, GLint internalformat, GLsi
 
 Let's now implement the logic behind the `dump_opengl_texture` function in a separate file:
 
-{% highlight C %}
+{% highlight C linenos %}
 #pragma once
 
 void dump_opengl_texture(const char* dump_file_name, const int width, const int height, const void* data)
