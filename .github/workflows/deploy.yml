@@ -18,13 +18,13 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.4
+          ruby-version: 3.4.8
 
       # https://github.com/limjh16/jekyll-action-ts
       - name: Build Jekyll website
         uses: limjh16/jekyll-action-ts@v2
         with:
-          enable_cache: true
+          enable_cache: false
 
       - name: Deploy built website
         uses: peaceiris/actions-gh-pages@v3
