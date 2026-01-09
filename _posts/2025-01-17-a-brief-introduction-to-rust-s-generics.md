@@ -277,7 +277,8 @@ Do keep in mind that, the more we use generics, the slower compilation times wil
 
 There's a few important things to consider when using generics:
 
-- As we have seen before, the compiler generates code for every data type we use. This means that, the more types we use, the slower the compilation times and the larger the final binary will be.
+* As we have seen before, the compiler generates code for every data type we use. This means that, the more types we use, the slower the compilation times and the larger the final binary will be.
+* Generics introduce complexity and can easily spiral out of control.
 
 ## Conclusions
 
