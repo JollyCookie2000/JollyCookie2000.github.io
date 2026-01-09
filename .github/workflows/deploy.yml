@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-slim
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - name: Build Jekyll website
         uses: limjh16/jekyll-action-ts@v2
         with:
-          enable_cache: false
+          enable_cache: true
 
       - name: Deploy built website
         uses: peaceiris/actions-gh-pages@v4
