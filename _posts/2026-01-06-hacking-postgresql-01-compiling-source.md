@@ -162,5 +162,6 @@ I like to start easy and slowly move onto more complex tasks, which is why the n
 These are some very interesting resources that I found on the web and that inspired me to take a closer look at Postgres.
 
 * [Hacking on PostgreSQL (YouTube)](https://youtu.be/-OZEPExwZEw)
+* [How does PostgreSQL actually work (YouTube)](https://youtu.be/OeKbL55OyL0)
 * [So, you want to be a developer?](https://wiki.postgresql.org/wiki/So,_you_want_to_be_a_developer%3F)
 * [Introduction to Hacking PostgreSQL](https://www.pgcon.org/2007/schedule/attachments/9-Introduction_to_Hacking_PostgreSQL_Neil_Conway.pdf)
