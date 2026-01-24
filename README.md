@@ -1,6 +1,6 @@
 # Blog Website
 
-This is the source code for my personal website which you can find [here](https://jollycookie2000.github.io).
+This is the source code for my personal website which you can find [here](https://lorenzopiazza.ch).
 
 This is an entirely static website built using the [Jekyll](https://jekyllrb.com) static website generator.
 
