@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-Hello! My name is Lorenzo from Switzerland. I got my Bachelor's degree in Software Engineering about a year ago.
+Hello! My name is Lorenzo and I'm from Switzerland. I got my Bachelor's degree in Software Engineering about a year ago.
 
 I discovered programming in middle school while trying out various mods for the video game *Minecraft* and I stumbled upon a mod called *ComputerCraft*. The mod adds a simple computer to the game that can be programmed using the Lua programming language. I instantly fell in love - there was something about writing code and seeing it execute that instantly made me think: this is what I want to do.
 
